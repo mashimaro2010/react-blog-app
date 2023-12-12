@@ -1,7 +1,37 @@
-export default function Blogs(){
-    return(
-        <>
-        <h2>บทความทั้งหมด</h2>
-        </>
-    )
+import blogs from "../data/blogs";
+import "./Blogs.css";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+export default function Blogs() {
+  const [search, setSearch] = useState("");
+  const [filterBlog,setFilterBlog]=useState([])
+  useEffect(()=>{
+    //กรองข้อมูลชื่อบทความ
+    const result=blogs.filter((item)=>item.title.includes(search));
+    setFilterBlog(result)
+  },[search]);
+  return (
+    <div className="blogs-container">
+      <div className="search-container">
+        <input 
+        type="text" 
+        className="search-input"
+        placeholder="ค้าหาบทความ"
+        value={search} 
+        onChange={(e)=> setSearch(e.target.value)}
+        />
+      </div>
+      <acticle>
+        {filterBlog.map((item) => (
+          <Link to={`/blog/${item.id}`} key={item.id}>
+            <div className="card">
+              <h2>{item.title}</h2>
+              <p>{item.content.substring(0, 300)}</p>
+              <hr />
+            </div>
+          </Link>
+        ))}
+      </acticle>
+    </div>
+  );
 }
